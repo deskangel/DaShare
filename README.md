@@ -1,16 +1,14 @@
-# dashare
+# DaShare
+Android version for DaFileShare.
 
-A new Flutter project.
+# How to use
+Other apps share files to `DaShare`, DaShare creates a temporary sharing service for that file and generates a QR code and URL, and other devices download the file by scanning the QR code or the URL in a browser.
 
-## Getting Started
+# Misc
+If you think the app is somewhat useful, please [donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=william%2exue%40gmail%2ecom&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=C2&bn=PP%2dDonationsBF&charset=UTF%2d8) to me for a coffee.
 
-This project is a starting point for a Flutter application.
+# 如何使用
+其他 App 通过分享文件到 DaShare，DaShare 为该文件创建临时的分享服务并生成二维码和url，其他设备通过扫描二维码或者使用 url 在浏览器中进行下载。
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# 其他
+如果你觉得这个 App有点用处，请[捐助](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=william%2exue%40gmail%2ecom&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=C2&bn=PP%2dDonationsBF&charset=UTF%2d8)我买个咖啡。
