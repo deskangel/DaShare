@@ -27,7 +27,7 @@ class _SharingPageState extends State<SharingPage> {
     if (SharedFileOp.instance.isFileServerRunning()) {
       return [
         Builder(
-          builder: (context) => FlatButton.icon(
+          builder: (context) => TextButton.icon(
             icon: Icon(Icons.content_copy),
             label: Text('Copy link'),
             onPressed: () {
@@ -36,7 +36,7 @@ class _SharingPageState extends State<SharingPage> {
             },
           ),
         ),
-        FlatButton.icon(
+        TextButton.icon(
           icon: Icon(Icons.stop_screen_share),
           label: Text('Stop sharing'),
           onPressed: () async {
@@ -47,7 +47,7 @@ class _SharingPageState extends State<SharingPage> {
       ];
     } else {
       return [
-        FlatButton.icon(
+        TextButton.icon(
           icon: Icon(Icons.queue_play_next),
           label: Text('Start sharing'),
           onPressed: () async {
@@ -161,6 +161,24 @@ class _SharingPageState extends State<SharingPage> {
                   ),
                 ),
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text('Ip address: '),
+              trailing: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                    value: SharedFileOp.instance.selectedIp,
+                    items: SharedFileOp.instance.ipAddresses
+                        .map((value) => DropdownMenuItem(child: Text(value), value: value))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        SharedFileOp.instance.selectedIp = value;
+                      });
+                    }),
+              ),
             ),
           ),
           Padding(

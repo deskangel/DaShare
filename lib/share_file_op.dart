@@ -26,6 +26,9 @@ class SharedFileOp {
   String _fileSize;
   String _fileName;
 
+  String selectedIp = '';
+  List<String> ipAddresses = [''];
+
   bool isFileServerRunning() {
     return _bSharing;
   }
@@ -84,6 +87,16 @@ class SharedFileOp {
     return null;
   }
 
+  Future<List<String>> getIpAddresses() async {
+    if (selectedIp.isEmpty) {
+      ipAddresses = await Utils.instance.retrieveServerIps();
+      if (ipAddresses.isNotEmpty) {
+        selectedIp = ipAddresses[0];
+      }
+    }
+    return ipAddresses;
+  }
+
   ///
   /// @return the url for sharing
   ///
@@ -102,11 +115,11 @@ class SharedFileOp {
       }
     }
 
-    var ip = await Utils.instance.retrieveServerIp();
-    if (null == ip) {
-      debugPrint('Failed to retrieve ip');
-      return null;
-    }
+    // var ips = await Utils.instance.retrieveServerIps();
+    // if (ips.isEmpty) {
+    //   debugPrint('Failed to retrieve ip');
+    //   return null;
+    // }
 
     var port = await _startFileServer(_fileName);
     if (null == port) {
@@ -114,10 +127,8 @@ class SharedFileOp {
       return null;
     }
 
-    _url = 'http://$ip:$port/$_fileName';
+    _url = 'http://$selectedIp:$port/$_fileName';
 
     return _url;
   }
-
-
 }

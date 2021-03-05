@@ -40,6 +40,7 @@ class DaFileShare extends StatelessWidget {
   }
 
   Future<bool> _hasSharingFileReady() async {
+    await SharedFileOp.instance.getIpAddresses();
     var fileInfo = await SharedFileOp.instance.retrieveFileInfo();
     return (fileInfo != null);
   }

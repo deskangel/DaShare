@@ -17,18 +17,22 @@ class Utils {
     return _instance;
   }
 
-  Future<String> retrieveServerIp() async {
+Future<List<String>> retrieveServerIps() async {
+    List<String> ips = [];
     var list = await NetworkInterface.list(type: InternetAddressType.IPv4);
-    if (list.length > 0 && list.elementAt(0).addresses.length > 0) {
-      return list.elementAt(0).addresses.elementAt(0).address;
+
+    for (NetworkInterface interface in list) {
+      for (var ip in interface.addresses) {
+        ips.add(ip.address);
+      }
     }
 
-    return null;
+    return ips;
   }
 
   void snackMsg(BuildContext context, String message, {int seconds: 1, SnackBarAction action}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.grey,
         duration: Duration(seconds: seconds),
         content: Text(message, style: TextStyle(color: Colors.black),),
