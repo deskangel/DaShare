@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:dashare/utils.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' as p;
 
 class SharedFileOp {
   factory SharedFileOp() => _getInstance();
@@ -73,11 +76,14 @@ class SharedFileOp {
     }
   }
 
-  Future<String?> _startFileServer(String fileName) async {
+  ///
+  /// return host:port
+  Future<String?> _startFileServer(String fileName, {String? host, int port = 0}) async {
     try {
-      var port = await _platform.invokeMethod('startFileService', {"fileName": fileName});
+      var hostPort =
+          await _platform.invokeMethod('startFileService', {'fileName': fileName, 'host': host, 'port': port});
       _bSharing = true;
-      return port.toString();
+      return hostPort.toString();
     } on PlatformException catch (e) {
       debugPrint('Failed to start file server: ${e.message}');
     }
@@ -113,19 +119,23 @@ class SharedFileOp {
       }
     }
 
-    // var ips = await Utils.instance.retrieveServerIps();
-    // if (ips.isEmpty) {
-    //   debugPrint('Failed to retrieve ip');
-    //   return null;
-    // }
+    if (selectedIp.isEmpty) {
+      return null;
+    }
 
-    var port = await _startFileServer(_fileName!);
-    if (null == port) {
+    List<int> rands = [];
+    for (var i = 0; i < 6; i++) {
+      rands.add(Random.secure().nextInt(10));
+    }
+
+    var fileId = rands.join() + p.extension(_fileName!);
+    var hostPort = await _startFileServer(fileId, host: selectedIp, port: 0);
+    if (null == hostPort) {
       debugPrint('Failed to start file server!');
       return null;
     }
 
-    _url = 'http://$selectedIp:$port/$_fileName';
+    _url = 'http://$hostPort/$fileId';
 
     return _url;
   }

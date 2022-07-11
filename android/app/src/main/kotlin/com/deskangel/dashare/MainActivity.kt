@@ -24,14 +24,17 @@ class MainActivity: FlutterActivity() {
                     if (this.intent.action == Intent.ACTION_SEND) {
                         val uri = this.intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
                         if (uri != null) {
-                            server = FileServer(this, uri, call.argument<String>("fileName")!!)
+                            val fileName = call.argument<String>("fileName")!!
+                            val host = call.argument<String>("host")
+                            val port = call.argument<Int>("port") ?: 0
+
+                            server = FileServer(this, uri, fileName, host, port)
                             server.start()
 
-                            result.success(server.listeningPort)
+                            result.success(server.hostname + ":" + server.listeningPort)
                         } else {
                             result.error("2", "not find the sharing file", null)
                         }
-
                     }
                 }
                 "stopFileService" -> {

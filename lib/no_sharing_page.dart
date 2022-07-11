@@ -12,7 +12,7 @@ class NoSharingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DaFileShare'),
+        title: const Text('DaShare'),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
