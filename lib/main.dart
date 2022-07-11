@@ -3,7 +3,9 @@ import 'package:dashare/share_file_op.dart';
 import 'package:dashare/sharing_page.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const DaFileShare());
 }
 
@@ -29,7 +31,7 @@ class DaFileShare extends StatelessWidget {
             case ConnectionState.waiting:
               return const CircularProgressIndicator();
             case ConnectionState.done:
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data!) {
                 return SharingPage();
               } else {
                 return const NoSharingPage();
