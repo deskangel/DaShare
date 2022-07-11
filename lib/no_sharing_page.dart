@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-
 import 'package:url_launcher/url_launcher_string.dart';
 
 class NoSharingPage extends StatelessWidget {
@@ -48,7 +47,12 @@ class NoSharingPage extends StatelessWidget {
                 ),
                 applicationVersion: 'Version ${packageInfo.version}\nbuild number: ${packageInfo.buildNumber}',
                 applicationLegalese: 'Copyright © 2003-${Settings.COPYRIGHT_DATE} DeskAngel',
-                children: socialContact,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: socialContact,
+                  )
+                ],
               );
             },
           ),
