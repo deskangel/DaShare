@@ -4,10 +4,12 @@ import 'package:dashare/sharing_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(DaFileShare());
+  runApp(const DaFileShare());
 }
 
 class DaFileShare extends StatelessWidget {
+  const DaFileShare({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,15 +27,14 @@ class DaFileShare extends StatelessWidget {
             case ConnectionState.none:
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             case ConnectionState.done:
-              if (snapshot.data) {
+              if (snapshot.hasData) {
                 return SharingPage();
               } else {
-                return NoSharingPage();
+                return const NoSharingPage();
               }
           }
-          return Container();
         },
       ),
     );
@@ -45,5 +46,3 @@ class DaFileShare extends StatelessWidget {
     return (fileInfo != null);
   }
 }
-
-

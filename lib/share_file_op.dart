@@ -6,25 +6,23 @@ import 'package:flutter/services.dart';
 class SharedFileOp {
   factory SharedFileOp() => _getInstance();
   static SharedFileOp get instance => _getInstance();
-  static SharedFileOp _instance;
+  static SharedFileOp? _instance;
 
   SharedFileOp._internal();
 
   static SharedFileOp _getInstance() {
-    if (_instance == null) {
-      _instance = SharedFileOp._internal();
-    }
+    _instance ??= SharedFileOp._internal();
 
-    return _instance;
+    return _instance!;
   }
 
-  static const _platform = const MethodChannel('com.deskangel.dashare/fileserver');
+  static const _platform = MethodChannel('com.deskangel.dashare/fileserver');
 
   bool _bSharing = false;
 
-  String _url;
-  String _fileSize;
-  String _fileName;
+  String? _url;
+  String? _fileSize;
+  String? _fileName;
 
   String selectedIp = '';
   List<String> ipAddresses = [''];
@@ -33,7 +31,7 @@ class SharedFileOp {
     return _bSharing;
   }
 
-  String get sharingFileUrl {
+  String? get sharingFileUrl {
     return _url;
   }
 
@@ -45,8 +43,8 @@ class SharedFileOp {
     return _fileName ?? 'unkonwn';
   }
 
-  Future<Map<String, String>> retrieveFileInfo() async {
-    var fileInfo = Map<String, String>();
+  Future<Map<String, String>?> retrieveFileInfo() async {
+    var fileInfo = <String, String>{};
     try {
       var result = await _platform.invokeMethod('retrieveFileInfo');
       fileInfo['fileName'] = result['fileName'];
@@ -75,7 +73,7 @@ class SharedFileOp {
     }
   }
 
-  Future<String> _startFileServer(String fileName) async {
+  Future<String?> _startFileServer(String fileName) async {
     try {
       var port = await _platform.invokeMethod('startFileService', {"fileName": fileName});
       _bSharing = true;
@@ -100,7 +98,7 @@ class SharedFileOp {
   ///
   /// @return the url for sharing
   ///
-  Future<String> startSharingFile() async {
+  Future<String?> startSharingFile() async {
     if (SharedFileOp.instance.isFileServerRunning()) {
       debugPrint('file server is running');
       return _url;
@@ -121,7 +119,7 @@ class SharedFileOp {
     //   return null;
     // }
 
-    var port = await _startFileServer(_fileName);
+    var port = await _startFileServer(_fileName!);
     if (null == port) {
       debugPrint('Failed to start file server!');
       return null;
