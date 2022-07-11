@@ -34,6 +34,11 @@
 # Web related
 lib/generated_plugin_registrant.dart
 
+windows/flutter/generated_plugins.cmake
+windows/flutter/generated_plugin_registrant.h
+windows/flutter/generated_plugin_registrant.cc
+macos/Flutter/GeneratedPluginRegistrant.swift
+
 # Symbolication related
 app.*.symbols
 
@@ -42,3 +47,8 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+!changes.log
+.build_number
+.fvm/flutter_sdk
+pubspec.lock

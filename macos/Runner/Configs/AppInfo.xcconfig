@@ -11,4 +11,4 @@ PRODUCT_NAME = dashare
 PRODUCT_BUNDLE_IDENTIFIER = com.deskangel.dashare
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2020 com.deskangel. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.deskangel. All rights reserved.

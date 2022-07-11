@@ -4,22 +4,30 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import fi.iki.elonen.NanoHTTPD
-import java.io.FileInputStream
 
 /**
  * Created by William Hsueh(williamx@deskangel.com) on 5/8/20.
+ *
+ * @param uri: the file which is sharing
+ * @param fileName: a fake name as id to match the http url
  */
-class FileServer( var context: Context, var uri: Uri, var fileName: String) : NanoHTTPD(0) {
+class FileServer( var context: Context, var uri: Uri, var fileName: String, host: String?, port: Int) : NanoHTTPD(host, port) {
 
     override fun serve(session: IHTTPSession?): Response {
         Log.d("dafileshare", "request uri: ${session?.uri}, file name: $fileName")
 
         if (session?.uri == "/$fileName") {
-            val fileDesc = context.contentResolver.openFileDescriptor(uri, "r", null)
-            val file = FileInputStream(fileDesc!!.fileDescriptor)
+            val fileDesc = context.contentResolver.openFileDescriptor(uri, "r")
+                ?: return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "File not found!")
 
-            val size: Long = file.channel.size()
-            return newFixedLengthResponse(Response.Status.OK, "application/octet-stream", file, size)
+            return when (val file = context.contentResolver.openInputStream(uri)) {
+                null -> {
+                    newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "File not found!")
+                }
+
+                else -> newFixedLengthResponse(Response.Status.OK, "application/octet-stream", file, fileDesc.statSize)
+            }
+
         }
 
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "File not found!")

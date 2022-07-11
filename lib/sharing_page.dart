@@ -8,15 +8,15 @@ class SharingPage extends StatefulWidget {
   SharingPage() : super(key: UniqueKey());
 
   @override
-  _SharingPageState createState() => _SharingPageState();
+  SharingPageState createState() => SharingPageState();
 }
 
-class _SharingPageState extends State<SharingPage> {
+class SharingPageState extends State<SharingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('DaFileShare'),
+        title: const Text('DaShare'),
       ),
       body: buildBodyWidget(),
       persistentFooterButtons: buildPersistentButtons(),
@@ -27,18 +27,18 @@ class _SharingPageState extends State<SharingPage> {
     if (SharedFileOp.instance.isFileServerRunning()) {
       return [
         Builder(
-          builder: (context) => FlatButton.icon(
-            icon: Icon(Icons.content_copy),
-            label: Text('Copy link'),
+          builder: (context) => TextButton.icon(
+            icon: const Icon(Icons.content_copy),
+            label: const Text('Copy link'),
             onPressed: () {
               Clipboard.setData(ClipboardData(text: SharedFileOp.instance.sharingFileUrl));
               Utils.instance.snackMsg(context, 'The url copied to clipboard');
             },
           ),
         ),
-        FlatButton.icon(
-          icon: Icon(Icons.stop_screen_share),
-          label: Text('Stop sharing'),
+        TextButton.icon(
+          icon: const Icon(Icons.stop_screen_share),
+          label: const Text('Stop sharing'),
           onPressed: () async {
             await SharedFileOp.instance.stopFileServer();
             setState(() {});
@@ -47,9 +47,9 @@ class _SharingPageState extends State<SharingPage> {
       ];
     } else {
       return [
-        FlatButton.icon(
-          icon: Icon(Icons.queue_play_next),
-          label: Text('Start sharing'),
+        TextButton.icon(
+          icon: const Icon(Icons.queue_play_next),
+          label: const Text('Start sharing'),
           onPressed: () async {
             await SharedFileOp.instance.startSharingFile();
             setState(() {});
@@ -76,7 +76,7 @@ class _SharingPageState extends State<SharingPage> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: const [
           Text(
             'Sorry... 😥',
             style: TextStyle(fontSize: 30),
@@ -90,73 +90,37 @@ class _SharingPageState extends State<SharingPage> {
     );
   }
 
-  Widget buildSharingWidget(BuildContext context, String _url) {
+  Widget buildSharingWidget(BuildContext context, String url) {
     return Center(
-      child: Container(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: QrImage(
-                backgroundColor: Colors.white,
-                data: _url,
-                size: MediaQuery.of(context).size.width / 2,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                _url,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Sharing...',
-                    style: TextStyle(fontSize: 36),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Please keep this app in front while sharing.',
-                      style: TextStyle(color: Colors.redAccent),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Text(SharedFileOp.instance.sharingFileName),
-                trailing: Text(SharedFileOp.instance.sharingFileSize),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildReadyWidget(BuildContext context) {
-    return Container(
       child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: QrImage(
+              backgroundColor: Colors.white,
+              data: url,
+              size: MediaQuery.of(context).size.width / 2,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              url,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: const [
                 Text(
-                  'File is ready for sharing...',
-                  style: TextStyle(fontSize: 30),
+                  'Sharing...',
+                  style: TextStyle(fontSize: 36),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Tap "Start sharing" button below to start.',
+                    'Please keep this app in front while sharing.',
                     style: TextStyle(color: Colors.redAccent),
                   ),
                 ),
@@ -172,6 +136,56 @@ class _SharingPageState extends State<SharingPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildReadyWidget(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                'File is ready for sharing...',
+                style: TextStyle(fontSize: 30),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Tap "Start sharing" button below to start.',
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            title: const Text('Ip address: '),
+            trailing: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                  value: SharedFileOp.instance.selectedIp,
+                  items: SharedFileOp.instance.ipAddresses
+                      .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+                      .toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      SharedFileOp.instance.selectedIp = value ?? '';
+                    });
+                  }),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            title: Text(SharedFileOp.instance.sharingFileName),
+            trailing: Text(SharedFileOp.instance.sharingFileSize),
+          ),
+        ),
+      ],
     );
   }
 }
