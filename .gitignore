@@ -50,3 +50,4 @@ app.*.map.json
 
 .build_number
 .fvm/flutter_sdk
+pubspec.lock
