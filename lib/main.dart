@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:dashare/no_sharing_page.dart';
 import 'package:dashare/share_file_op.dart';
 import 'package:dashare/sharing_page.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(const DaFileShare());
@@ -15,7 +18,7 @@ class DaFileShare extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DaFileShare',
+      title: 'DaShare',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,

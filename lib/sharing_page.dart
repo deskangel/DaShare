@@ -16,7 +16,7 @@ class SharingPageState extends State<SharingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DaFileShare'),
+        title: const Text('DaShare'),
       ),
       body: buildBodyWidget(),
       persistentFooterButtons: buildPersistentButtons(),
