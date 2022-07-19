@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Utils {
   factory Utils() => _getInstance();
@@ -37,5 +38,19 @@ class Utils {
         action: action,
       ));
     });
+  }
+
+    Future<bool> requestStoragePermission() async {
+    var status = await Permission.storage.status;
+    if (status.isPermanentlyDenied) {
+      return false;
+    }
+
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+      return (status == PermissionStatus.granted);
+    } else {
+      return true;
+    }
   }
 }
