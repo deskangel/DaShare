@@ -32,7 +32,7 @@ class DaFileShare extends StatelessWidget {
             case ConnectionState.none:
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasData && snapshot.data!) {
                 return SharingPage();
@@ -47,6 +47,11 @@ class DaFileShare extends StatelessWidget {
 
   Future<bool> _hasSharingFileReady() async {
     await SharedFileOp.instance.getIpAddresses();
+
+    if (await SharedFileOp.instance.getSharedFileUriScheme() == null) {
+      return false;
+    }
+
     var fileInfo = await SharedFileOp.instance.retrieveFileInfo();
     return (fileInfo != null);
   }

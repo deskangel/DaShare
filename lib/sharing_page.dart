@@ -182,7 +182,12 @@ class SharingPageState extends State<SharingPage> {
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
             title: Text(SharedFileOp.instance.sharingFileName),
-            trailing: Text(SharedFileOp.instance.sharingFileSize),
+            trailing: Text(
+              SharedFileOp.instance.sharingFileSize,
+              style: TextStyle(
+                color: SharedFileOp.instance.error == null ? null : Colors.red,
+              ),
+            ),
           ),
         ),
       ],

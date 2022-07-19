@@ -27,11 +27,17 @@ class SharedFileOp {
   String? _fileSize;
   String? _fileName;
 
+  String? _error;
+
   String selectedIp = '';
   List<String> ipAddresses = [''];
 
   bool isFileServerRunning() {
     return _bSharing;
+  }
+
+  String? get error {
+    return _error;
   }
 
   String? get sharingFileUrl {
@@ -46,19 +52,44 @@ class SharedFileOp {
     return _fileName ?? 'unkonwn';
   }
 
+  Future<String?> getSharedFileUriScheme() async {
+    try {
+      var result = await _platform.invokeMethod('getSharedFileUriScheme');
+      if (result == 'file') {
+        await Utils.instance.requestStoragePermission();
+      }
+      return result;
+    } on PlatformException catch (e) {
+      debugPrint(e.message);
+      return null;
+    }
+  }
+
   Future<Map<String, String>?> retrieveFileInfo() async {
     var fileInfo = <String, String>{};
     try {
       var result = await _platform.invokeMethod('retrieveFileInfo');
       fileInfo['fileName'] = result['fileName'];
-      fileInfo['fileSize'] = filesize(result['fileSize']);
+
+      var size = result['fileSize'];
+      fileInfo['fileSize'] = (size == -1) ? '-1' : filesize(result['fileSize']);
 
       _fileName = fileInfo["fileName"];
       _fileSize = fileInfo["fileSize"];
+      _error = result['code'];
 
       return fileInfo;
     } on PlatformException catch (e) {
       debugPrint(e.message);
+      if (e.code == '1') {
+        return null;
+      } else if (e.code == '2') {
+        _error = e.message;
+        return {'code': e.message ?? 'Cannot find the sharing file'};
+      } else if (e.code == '3') {
+        _error = e.message;
+        return {'code': e.message ?? 'Failed to retrieve the sharing file information'};
+      }
     }
     return null;
   }

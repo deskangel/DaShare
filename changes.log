@@ -1,3 +1,6 @@
+v1.1.1
+1. Add support for file:// scheme sharing. Some app shares file via file:// scheme instead of content:// scheme, now it is supported.
+
 v1.1.0
 1. Support for selecting the host address
 2. Replace real file names with six digits for input convenience and security
