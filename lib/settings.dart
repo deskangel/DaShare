@@ -11,6 +11,6 @@ class Settings {
     return _instance!;
   }
 
-  static const int COPYRIGHT_DATE = 2022;
+  static const int COPYRIGHT_DATE = 2023;
 
 }
