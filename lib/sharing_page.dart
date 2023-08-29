@@ -32,14 +32,16 @@ class SharingPageState extends State<SharingPage> {
     if (SharedFileOp.instance.isFileServerRunning()) {
       return [
         Builder(
-          builder: (context) => TextButton.icon(
-            icon: const Icon(Icons.content_copy),
-            label: const Text('Copy link'),
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: SharedFileOp.instance.sharingFileUrl ?? ''));
-              Utils.instance.snackMsg(context, 'The url copied to clipboard');
-            },
-          ),
+          builder: (context) {
+            return TextButton.icon(
+              icon: const Icon(Icons.content_copy),
+              label: const Text('Copy link'),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: SharedFileOp.instance.sharingFileUrl ?? ''));
+                Utils.instance.snackMsg(context, 'The url copied to clipboard');
+              },
+            );
+          },
         ),
         TextButton.icon(
           icon: const Icon(Icons.stop_screen_share),
