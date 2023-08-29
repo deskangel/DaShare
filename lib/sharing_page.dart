@@ -3,7 +3,10 @@ import 'package:dashare/share_file_op.dart';
 import 'package:dashare/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SharingPage extends StatefulWidget {
   SharingPage() : super(key: UniqueKey());
@@ -17,7 +20,69 @@ class SharingPageState extends State<SharingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DaShare'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.fitHeight,
+              width: 24,
+              color: Colors.blue,
+            ),
+            const SizedBox(width: 8),
+            const Text('DaShare'),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline_rounded),
+            onPressed: () async {
+              PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+              var socialContact = [
+                IconButton(
+                  onPressed: () {
+                    final uri = Uri(
+                      scheme: 'mailto',
+                      path: 'admin@deskangel.com',
+                      query: 'subject=[DASHARE v${packageInfo.version}]',
+                    );
+                    launchUrlString(
+                      uri.toString(),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                  icon: const FaIcon(FontAwesomeIcons.envelope, color: Colors.red),
+                ),
+                IconButton(
+                  onPressed: () {
+                    launchUrlString(
+                      'https://twitter.com/ideskangel',
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                  icon: const FaIcon(FontAwesomeIcons.twitter, color: Colors.blue),
+                ),
+              ];
+
+              showAboutDialog(
+                context: this.context,
+                applicationIcon: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.fitHeight,
+                  width: 32,
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: socialContact,
+                  ),
+                ],
+                applicationVersion: 'Version ${packageInfo.version}\nbuild number: ${packageInfo.buildNumber}',
+                applicationLegalese: 'Copyright © 2003-${Settings.COPYRIGHT_DATE} DeskAngel',
+              );
+            },
+          ),
+        ],
       ),
       body: buildBodyWidget(),
       persistentFooterButtons: buildPersistentButtons(),
@@ -156,7 +221,7 @@ class SharingPageState extends State<SharingPage> {
                   ),
                   TextSpan(
                     text: SharedFileOp.instance.sharingFileName,
-                    style: const TextStyle(color: Colors.green),
+                    style: TextStyle(color: Colors.amber[900]),
                   ),
                 ],
               ),
@@ -190,6 +255,7 @@ class SharingPageState extends State<SharingPage> {
           child: Column(
             children: [
               ListTile(
+                visualDensity: VisualDensity.compact,
                 title: const Text('Ip address: '),
                 trailing: DropdownButtonHideUnderline(
                   child: DropdownButton(
@@ -205,10 +271,12 @@ class SharingPageState extends State<SharingPage> {
                 ),
               ),
               const ListTile(
+                visualDensity: VisualDensity.compact,
                 title: Text('Port: '),
                 trailing: Text('${Settings.DEFAULT_PORT}'),
               ),
               SwitchListTile(
+                visualDensity: VisualDensity.compact,
                 value: Settings.instance.useRandomPort,
                 onChanged: (value) {
                   if (value) {
