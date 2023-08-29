@@ -1,3 +1,4 @@
+import 'package:dashare/settings.dart';
 import 'package:dashare/share_file_op.dart';
 import 'package:dashare/utils.dart';
 import 'package:flutter/material.dart';
@@ -141,53 +142,88 @@ class SharingPageState extends State<SharingPage> {
 
   Widget buildReadyWidget(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'File is ready for sharing...',
-                style: TextStyle(fontSize: 30),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Tap "Start sharing" button below to start.',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
-              ),
-            ],
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
-            title: const Text('Ip address: '),
-            trailing: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                  value: SharedFileOp.instance.selectedIp,
-                  items: SharedFileOp.instance.ipAddresses
-                      .map((value) => DropdownMenuItem(value: value, child: Text(value)))
-                      .toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      SharedFileOp.instance.selectedIp = value ?? '';
-                    });
-                  }),
+            title: Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'File name:\n',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: SharedFileOp.instance.sharingFileName,
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            title: Text(SharedFileOp.instance.sharingFileName),
             trailing: Text(
               SharedFileOp.instance.sharingFileSize,
               style: TextStyle(
                 color: SharedFileOp.instance.error == null ? null : Colors.red,
               ),
             ),
+          ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'File is ready for sharing...',
+              style: TextStyle(fontSize: 30),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Tap "Start sharing" button below to start.',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              ListTile(
+                title: const Text('Ip address: '),
+                trailing: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                      value: SharedFileOp.instance.selectedIp,
+                      items: SharedFileOp.instance.ipAddresses
+                          .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          SharedFileOp.instance.selectedIp = value ?? '';
+                        });
+                      }),
+                ),
+              ),
+              const ListTile(
+                title: Text('Port: '),
+                trailing: Text('${Settings.DEFAULT_PORT}'),
+              ),
+              SwitchListTile(
+                value: Settings.instance.useRandomPort,
+                onChanged: (value) {
+                  if (value) {
+                    SharedFileOp.instance.port = 0;
+                  } else {
+                    SharedFileOp.instance.port = Settings.DEFAULT_PORT;
+                  }
+
+                  setState(() {
+                    Settings.instance.useRandomPort = value;
+                  });
+                },
+                title: const Text('Use random port'),
+              ),
+            ],
           ),
         ),
       ],

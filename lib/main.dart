@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dashare/no_sharing_page.dart';
+import 'package:dashare/settings.dart';
 import 'package:dashare/share_file_op.dart';
 import 'package:dashare/sharing_page.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Settings.instance.init();
 
   runApp(const DaFileShare());
 }

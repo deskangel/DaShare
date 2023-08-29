@@ -32,6 +32,8 @@ class SharedFileOp {
   String selectedIp = '';
   List<String> ipAddresses = [''];
 
+  int port = 0;
+
   bool isFileServerRunning() {
     return _bSharing;
   }
@@ -160,7 +162,7 @@ class SharedFileOp {
     }
 
     var fileId = rands.join() + p.extension(_fileName!);
-    var hostPort = await _startFileServer(fileId, fileName: _fileName, host: selectedIp, port: 0);
+    var hostPort = await _startFileServer(fileId, fileName: _fileName, host: this.selectedIp, port: this.port);
     if (null == hostPort) {
       debugPrint('Failed to start file server!');
       return null;
