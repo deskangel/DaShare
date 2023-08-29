@@ -36,7 +36,7 @@ class SharingPageState extends State<SharingPage> {
             icon: const Icon(Icons.content_copy),
             label: const Text('Copy link'),
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: SharedFileOp.instance.sharingFileUrl));
+              Clipboard.setData(ClipboardData(text: SharedFileOp.instance.sharingFileUrl ?? ''));
               Utils.instance.snackMsg(context, 'The url copied to clipboard');
             },
           ),
@@ -78,10 +78,10 @@ class SharingPageState extends State<SharingPage> {
   }
 
   Widget buildFailedWidget() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
             'Sorry... 😥',
             style: TextStyle(fontSize: 30),
@@ -101,7 +101,7 @@ class SharingPageState extends State<SharingPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: QrImage(
+            child: QrImageView(
               backgroundColor: Colors.white,
               data: url,
               size: MediaQuery.of(context).size.width / 2,
@@ -114,10 +114,10 @@ class SharingPageState extends State<SharingPage> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Expanded(
+          const Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text(
                   'Sharing...',
                   style: TextStyle(fontSize: 36),
@@ -173,9 +173,9 @@ class SharingPageState extends State<SharingPage> {
             ),
           ),
         ),
-        Column(
+        const Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               'File is ready for sharing...',
               style: TextStyle(fontSize: 30),

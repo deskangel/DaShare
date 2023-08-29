@@ -78,22 +78,24 @@ class Home extends StatelessWidget {
             ),
           ];
 
-          showAboutDialog(
-            context: context,
-            applicationIcon: Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.fitHeight,
-              width: 32,
-            ),
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: socialContact,
+          if (context.mounted) {
+            showAboutDialog(
+              context: context,
+              applicationIcon: Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.fitHeight,
+                width: 32,
               ),
-            ],
-            applicationVersion: 'Version ${packageInfo.version}\nbuild number: ${packageInfo.buildNumber}',
-            applicationLegalese: 'Copyright © 2003-${Settings.COPYRIGHT_DATE} DeskAngel',
-          );
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: socialContact,
+                ),
+              ],
+              applicationVersion: 'Version ${packageInfo.version}\nbuild number: ${packageInfo.buildNumber}',
+              applicationLegalese: 'Copyright © 2003-${Settings.COPYRIGHT_DATE} DeskAngel',
+            );
+          }
         },
       ),
     ];

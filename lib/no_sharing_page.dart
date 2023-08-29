@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -16,7 +14,6 @@ class NoSharingPage extends StatefulWidget {
 class _NoSharingPageState extends State<NoSharingPage> {
   bool scan = false;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,32 +21,34 @@ class _NoSharingPageState extends State<NoSharingPage> {
         title: this.widget.appTitle,
         actions: this.widget.appBarActions,
       ),
-      body: scan? MobileScanner(
-        // fit: BoxFit.contain,
-        onDetect: (capture) {
-          final List<Barcode> barcodes = capture.barcodes;
-          final Uint8List? image = capture.image;
-          for (final barcode in barcodes) {
-            debugPrint('Barcode found! ${barcode.rawValue}');
-          }
-        },
-      ):  Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text(
-            'No sharing file found!',
-            style: TextStyle(fontSize: 30),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'You should select and share a file in other App to DaFileShare.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.redAccent),
+      body: scan
+          ? MobileScanner(
+              // fit: BoxFit.contain,
+              onDetect: (capture) {
+                final List<Barcode> barcodes = capture.barcodes;
+                // final Uint8List? image = capture.image;
+                for (final barcode in barcodes) {
+                  debugPrint('Barcode found! ${barcode.rawValue}');
+                }
+              },
+            )
+          : const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'No sharing file found!',
+                  style: TextStyle(fontSize: 30),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'You should select and share a file in other App to DaFileShare.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.redAccent),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       persistentFooterButtons: buildPersistentButtons(),
     );
   }
