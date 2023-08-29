@@ -109,10 +109,10 @@ class SharedFileOp {
 
   ///
   /// return host:port
-  Future<String?> _startFileServer(String fileName, {String? host, int port = 0}) async {
+  Future<String?> _startFileServer(String shortName, {String? fileName, String? host, int port = 0}) async {
     try {
       var hostPort =
-          await _platform.invokeMethod('startFileService', {'fileName': fileName, 'host': host, 'port': port});
+          await _platform.invokeMethod('startFileService', {'shortName': shortName, 'fileName': fileName, 'host': host, 'port': port});
       _bSharing = true;
       return hostPort.toString();
     } on PlatformException catch (e) {
@@ -160,7 +160,7 @@ class SharedFileOp {
     }
 
     var fileId = rands.join() + p.extension(_fileName!);
-    var hostPort = await _startFileServer(fileId, host: selectedIp, port: 0);
+    var hostPort = await _startFileServer(fileId, fileName: _fileName, host: selectedIp, port: 0);
     if (null == hostPort) {
       debugPrint('Failed to start file server!');
       return null;

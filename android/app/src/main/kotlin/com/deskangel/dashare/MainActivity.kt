@@ -1,8 +1,10 @@
 package com.deskangel.dashare
 
+import android.annotation.TargetApi
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.OpenableColumns
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -24,13 +26,14 @@ class MainActivity: FlutterActivity() {
             when (call.method) {
                 "startFileService" -> {
                     if (this.intent.action == Intent.ACTION_SEND) {
-                        val uri = this.intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                        val uri = getParcelableExtraUri()
                         if (uri != null) {
-                            val fileName = call.argument<String>("fileName")!!
+                            val shortName = call.argument<String>("shortName")!!
+                            val fileName = call.argument<String>("fileName")
                             val host = call.argument<String>("host")
                             val port = call.argument<Int>("port") ?: 0
 
-                            server = FileServer(this, uri, fileName, host, port)
+                            server = FileServer(this, uri, shortName, fileName, host, port)
                             server.start()
 
                             result.success(server.hostname + ":" + server.listeningPort)
@@ -52,7 +55,7 @@ class MainActivity: FlutterActivity() {
                 }
                 "getSharedFileUriScheme" -> {
                     if (this.intent.action == Intent.ACTION_SEND) {
-                        val uri = this.intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                        val uri = getParcelableExtraUri()
                         if (uri == null) {
                             result.error("2", "Cannot find the sharing file", null)
                         } else if (uri.scheme == null) {
@@ -67,7 +70,7 @@ class MainActivity: FlutterActivity() {
                 "retrieveFileInfo" -> {
                     if (this.intent.action == Intent.ACTION_SEND) {
 
-                        val uri = this.intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                        val uri = getParcelableExtraUri()
 
                         if (uri == null) {
                             result.error("2", "Cannot find the sharing file", null)
@@ -147,4 +150,14 @@ class MainActivity: FlutterActivity() {
 
     }
 
+    private fun getParcelableExtraUri(): Uri? {
+        val uri =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                this.intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                this.intent.getParcelableExtra(Intent.EXTRA_STREAM)
+            }
+        return uri
+    }
 }
