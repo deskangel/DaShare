@@ -1,3 +1,9 @@
+v1.2.0
+1. Added QR scan
+2. Support fixed port
+3. Notify client browser of the file's real name
+4. More UI improvements
+
 v1.1.1
 1. Add support for file:// scheme sharing. Some app shares file via file:// scheme instead of content:// scheme, now it is supported.
 
