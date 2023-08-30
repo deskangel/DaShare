@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dashare/settings.dart';
 import 'package:dashare/utils.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
@@ -154,6 +155,12 @@ class SharedFileOp {
 
     if (selectedIp.isEmpty) {
       return null;
+    }
+
+    if (Settings.instance.useRandomPort) {
+      port = 0;
+    } else {
+      port = Settings.DEFAULT_PORT;
     }
 
     List<int> rands = [];

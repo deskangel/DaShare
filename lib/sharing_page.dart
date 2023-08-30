@@ -220,12 +220,6 @@ class SharingPageState extends State<SharingPage> {
                 visualDensity: VisualDensity.compact,
                 value: Settings.instance.useRandomPort,
                 onChanged: (value) {
-                  if (value) {
-                    SharedFileOp.instance.port = 0;
-                  } else {
-                    SharedFileOp.instance.port = Settings.DEFAULT_PORT;
-                  }
-
                   setState(() {
                     Settings.instance.useRandomPort = value;
                   });
