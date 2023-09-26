@@ -1,3 +1,4 @@
+import 'package:dashare/sharing_text_page.dart';
 import 'package:dashare/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,6 +143,18 @@ class _NoSharingPageState extends State<NoSharingPage> {
         ];
       }
       return [
+        TextButton.icon(
+          icon: const Icon(Icons.text_snippet_outlined),
+          label: const Text('Text'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SharingTextPage(),
+              ),
+            );
+          }
+        ),
         btnScan,
       ];
     }

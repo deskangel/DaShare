@@ -104,6 +104,10 @@ class Home extends StatelessWidget {
   Future<bool> _hasSharingFileReady() async {
     await SharedFileOp.instance.getIpAddresses();
 
+    if (await SharedFileOp.instance.getSharedText() != null) {
+      return true;
+    }
+
     if (await SharedFileOp.instance.getSharedFileUriScheme() == null) {
       return false;
     }

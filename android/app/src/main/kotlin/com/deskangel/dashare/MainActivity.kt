@@ -67,6 +67,15 @@ class MainActivity: FlutterActivity() {
                         result.error("1", "non sharing action", null)
                     }
                 }
+                "getSharedText" -> {
+                    if (this.intent.action == Intent.ACTION_SEND) {
+                        if (this.intent.type == "text/plain") {
+                            result.success(this.intent.getStringExtra(Intent.EXTRA_TEXT))
+                        } else {
+                            result.error("3", "Cannot find the sharing text", null)
+                        }
+                    }
+                }
                 "retrieveFileInfo" -> {
                     if (this.intent.action == Intent.ACTION_SEND) {
 

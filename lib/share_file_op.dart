@@ -55,6 +55,16 @@ class SharedFileOp {
     return _fileName ?? 'unkonwn';
   }
 
+  Future<String?> getSharedText() async {
+    try {
+      var result = await _platform.invokeMethod('getSharedText');
+      return result;
+    } on PlatformException catch (e) {
+      debugPrint(e.message);
+      return null;
+    }
+  }
+
   Future<String?> getSharedFileUriScheme() async {
     try {
       var result = await _platform.invokeMethod('getSharedFileUriScheme');
