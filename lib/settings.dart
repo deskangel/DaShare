@@ -16,6 +16,8 @@ class Settings {
   static const int COPYRIGHT_DATE = 2023;
   static const int DEFAULT_PORT = 30800;
 
+  static const int MAX_SIZE_FOR_QR_CODE = 1024;
+
   late SharedPreferences prefs;
   Future init({SharedPreferences? prefs}) async {
     this.prefs = prefs ?? await SharedPreferences.getInstance();

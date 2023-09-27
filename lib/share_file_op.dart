@@ -57,7 +57,7 @@ class SharedFileOp {
 
   String? _textContent;
   String? get textContent {
-    return _textContent ?? '';
+    return _textContent;
   }
 
   Future<String?> getSharedText() async {
@@ -127,10 +127,19 @@ class SharedFileOp {
 
   ///
   /// return host:port
-  Future<String?> _startFileServer(String shortName, {String? fileName, String? host, int port = 0}) async {
+  Future<String?> _startFileServer(
+    String shortName, {
+    String? fileName,
+    String? host,
+    int port = 0,
+  }) async {
     try {
-      var hostPort =
-          await _platform.invokeMethod('startFileService', {'shortName': shortName, 'fileName': fileName, 'host': host, 'port': port});
+      var hostPort = await _platform.invokeMethod('startFileService', {
+        'shortName': shortName,
+        'fileName': fileName,
+        'host': host,
+        'port': port,
+      });
       _bSharing = true;
       return hostPort.toString();
     } on PlatformException catch (e) {

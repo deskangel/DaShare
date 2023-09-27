@@ -1,12 +1,12 @@
+import 'package:dashare/settings.dart';
+import 'package:dashare/share_file_op.dart';
 import 'package:dashare/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class SharingTextPage extends StatefulWidget {
-  const SharingTextPage({super.key, this.content});
-
-  final String? content;
+  const SharingTextPage({super.key});
 
   @override
   State<SharingTextPage> createState() => SharingTextPageState();
@@ -21,7 +21,7 @@ class SharingTextPageState extends State<SharingTextPage> {
   void initState() {
     super.initState();
 
-    this.controller = TextEditingController(text: this.widget.content ?? 'hello world');
+    this.controller = TextEditingController(text: SharedFileOp.instance.textContent ?? 'hello world');
   }
 
   @override
@@ -71,9 +71,13 @@ class SharingTextPageState extends State<SharingTextPage> {
             return;
           }
 
-          if (this.controller.text.length >= 1024) {
-            Utils.instance.snackMsg(context,
-                'The text content exceeds 2048 characters, \nand QR codes may not be suitable. \nPlease consider using alternative methods for sharing.',
+          if (this.controller.text.length >= Settings.MAX_SIZE_FOR_QR_CODE) {
+            Utils.instance.snackMsg(
+                context,
+                '''The text content exceeds ${Settings.MAX_SIZE_FOR_QR_CODE} characters, and QR codes may not be suitable.
+
+Please consider using 'Share' button to share it.''',
+                seconds: 8,
                 action: SnackBarAction(
                   label: 'Continue',
                   onPressed: () {
