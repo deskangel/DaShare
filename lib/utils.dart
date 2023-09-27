@@ -30,14 +30,12 @@ class Utils {
   }
 
   void snackMsg(BuildContext context, String message, {int seconds = 1, SnackBarAction? action}) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.grey,
-        duration: Duration(seconds: seconds),
-        content: Text(message, style: const TextStyle(color: Colors.black)),
-        action: action,
-      ));
-    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: Colors.grey,
+      duration: Duration(seconds: seconds),
+      content: Text(message, style: const TextStyle(color: Colors.black)),
+      action: action,
+    ));
   }
 
     Future<bool> requestStoragePermission() async {

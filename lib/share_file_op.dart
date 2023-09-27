@@ -55,10 +55,15 @@ class SharedFileOp {
     return _fileName ?? 'unkonwn';
   }
 
+  String? _textContent;
+  String? get textContent {
+    return _textContent ?? '';
+  }
+
   Future<String?> getSharedText() async {
     try {
-      var result = await _platform.invokeMethod('getSharedText');
-      return result;
+      _textContent = await _platform.invokeMethod('getSharedText');
+      return _textContent;
     } on PlatformException catch (e) {
       debugPrint(e.message);
       return null;
