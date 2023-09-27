@@ -74,6 +74,8 @@ class MainActivity: FlutterActivity() {
                         } else {
                             result.error("3", "Cannot find the sharing text", null)
                         }
+                    } else {
+                        result.error("1", "non sharing action", null)
                     }
                 }
                 "retrieveFileInfo" -> {
