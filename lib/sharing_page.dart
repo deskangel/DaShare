@@ -29,7 +29,7 @@ class SharingPageState extends State<SharingPage> {
   }
 
   List<Widget> buildPersistentButtons() {
-    if (SharedFileOp.instance.isFileServerRunning()) {
+    if (SharedFileOp.instance.isServerRunning()) {
       return [
         Builder(
           builder: (context) {
@@ -67,7 +67,7 @@ class SharingPageState extends State<SharingPage> {
   }
 
   Widget buildBodyWidget() {
-    if (SharedFileOp.instance.isFileServerRunning()) {
+    if (SharedFileOp.instance.isServerRunning()) {
       var sharingUrl = SharedFileOp.instance.sharingFileUrl;
       if (null == sharingUrl) {
         return buildFailedWidget();

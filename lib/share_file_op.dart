@@ -35,7 +35,7 @@ class SharedFileOp {
 
   int port = 0;
 
-  bool isFileServerRunning() {
+  bool isServerRunning() {
     return _bSharing;
   }
 
@@ -163,7 +163,7 @@ class SharedFileOp {
   /// @return the url for sharing
   ///
   Future<String?> startSharingFile() async {
-    if (SharedFileOp.instance.isFileServerRunning()) {
+    if (SharedFileOp.instance.isServerRunning()) {
       debugPrint('file server is running');
       return _url;
     }
