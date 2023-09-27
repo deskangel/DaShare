@@ -203,4 +203,42 @@ class SharedFileOp {
 
     return _url;
   }
+
+  ///
+  /// @return the url for sharing
+  ///
+  Future<String?> startSharingText() async {
+    if (SharedFileOp.instance.isServerRunning()) {
+      debugPrint('web server is running');
+      return _url;
+    }
+
+    var text = SharedFileOp.instance.textContent;
+    if (null == text) {
+      debugPrint('No shared text found!');
+
+      return null;
+    }
+
+    if (selectedIp.isEmpty) {
+      return null;
+    }
+
+    if (Settings.instance.useRandomPort) {
+      port = 0;
+    } else {
+      port = Settings.DEFAULT_PORT;
+    }
+
+    var fileId = 'text-share.html';
+    var hostPort = await _startFileServer(fileId, fileName: text, host: this.selectedIp, port: this.port);
+    if (null == hostPort) {
+      debugPrint('Failed to start web server!');
+      return null;
+    }
+
+    _url = 'http://$hostPort/$fileId';
+
+    return _url;
+  }
 }
