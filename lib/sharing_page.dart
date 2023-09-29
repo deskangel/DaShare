@@ -1,5 +1,6 @@
 import 'package:dashare/settings.dart';
 import 'package:dashare/share_file_op.dart';
+import 'package:dashare/sharing_text_page.dart';
 import 'package:dashare/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,6 +55,32 @@ class SharingPageState extends State<SharingPage> {
       ];
     } else {
       return [
+        if (SharedFileOp.instance.textContent != null)
+          Builder(
+            builder: (context) {
+              return TextButton.icon(
+                icon: const Icon(Icons.content_copy),
+                label: const Text('Copy'),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: SharedFileOp.instance.sharingFileUrl ?? ''));
+                  Utils.instance.snackMsg(context, 'The content copied to clipboard');
+                },
+              );
+            },
+          ),
+        if (SharedFileOp.instance.textContent != null)
+          TextButton.icon(
+            icon: const Icon(Icons.text_snippet_outlined),
+            label: const Text('Text'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SharingTextPage(),
+                ),
+              );
+            },
+          ),
         TextButton.icon(
           icon: const Icon(Icons.queue_play_next),
           label: const Text('Start sharing'),
