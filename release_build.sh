@@ -59,6 +59,8 @@ elif [[ "$OPT_APP_FORMAT" == "apk" ]]; then
     if [[ $BUILD_RESULT == 0 ]]; then
         # Update the build number
         echo $BUILD_NUMBER > .build_number
+
+        open "build/app/outputs/bundle/release"
     else
         clrecho "Failed to build the $OPT_APP_FORMAT"
         return;
