@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dashare/settings.dart';
@@ -272,7 +273,20 @@ class SharedFileOp {
     }
 
     var fileId = '${rands.join()}.html';
-    var hostPort = await _startTextServer(fileId, sharedText: text, host: this.selectedIp, port: this.port);
+
+    String html = '''
+<html>
+<head>
+    <title>Text Share</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    ${const HtmlEscape().convert(text)}
+</body>
+</html>
+''';
+
+    var hostPort = await _startTextServer(fileId, sharedText: html, host: this.selectedIp, port: this.port);
     if (null == hostPort) {
       debugPrint('Failed to start text server!');
       return null;
