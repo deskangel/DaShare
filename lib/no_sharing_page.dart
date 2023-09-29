@@ -67,26 +67,37 @@ class _NoSharingPageState extends State<NoSharingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: this.content == null
                   ? [
-                      const Text(
-                        'No sharing file found!',
-                        style: TextStyle(fontSize: 30),
-                      ),
                       const Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          'You should select and share a file in other App to DaFileShare.',
+                          'No sharing file or text found!',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.redAccent),
+                          style: TextStyle(fontSize: 30),
                         ),
                       ),
                       const SizedBox(height: 20),
                       const Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          'Or scan a QR code to get the shared url.',
-                          style: TextStyle(fontSize: 30),
-                          // softWrap: true,
+                          'You should select and share a file or text in other App to DaFileShare.',
                           textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.redAccent),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'Or scan a QR code to get the shared url or text.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.redAccent),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'Or Tap the Text button below to type in content for sharing.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.redAccent),
                         ),
                       ),
                     ]
@@ -144,17 +155,16 @@ class _NoSharingPageState extends State<NoSharingPage> {
       }
       return [
         TextButton.icon(
-          icon: const Icon(Icons.text_snippet_outlined),
-          label: const Text('Text'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SharingTextPage(),
-              ),
-            );
-          }
-        ),
+            icon: const Icon(Icons.text_snippet_outlined),
+            label: const Text('Text'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SharingTextPage(),
+                ),
+              );
+            }),
         btnScan,
       ];
     }
