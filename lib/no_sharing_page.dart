@@ -126,10 +126,10 @@ class _NoSharingPageState extends State<NoSharingPage> {
         return [
           TextButton.icon(
             icon: const Icon(Icons.content_copy),
-            label: const Text('Copy link'),
+            label: const Text('Copy'),
             onPressed: () {
               Clipboard.setData(ClipboardData(text: this.content!));
-              Utils.instance.snackMsg(context, 'The url copied to clipboard');
+              Utils.instance.snackMsg(context, 'The content copied to clipboard');
             },
           ),
           TextButton.icon(

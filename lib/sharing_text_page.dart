@@ -22,7 +22,7 @@ class SharingTextPageState extends State<SharingTextPage> {
   void initState() {
     super.initState();
 
-    this.controller = TextEditingController(text: SharedFileOp.instance.textContent ?? 'hello world');
+    this.controller = TextEditingController(text: SharedFileOp.instance.textContent);
   }
 
   @override

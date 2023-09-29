@@ -1,4 +1,3 @@
-import android.text.Html
 import android.util.Log
 import fi.iki.elonen.NanoHTTPD
 
@@ -14,22 +13,7 @@ class TextServer(private var shortName: String, private var sharedText: String, 
     }
 
     private fun serverText(): Response {
-        val htmlCode = "<h1>This is a heading</h1><p>This is a paragraph</p>$sharedText"
-
-        val escapedHtmlCode = Html.escapeHtml(htmlCode)
-
-        val htmlContent = """
-                <html>
-                <head>
-                    <title>Text Share</title>
-                </head>
-                <body>
-                    $escapedHtmlCode
-                </body>
-                </html>
-            """.trimIndent()
-
-        val response = newFixedLengthResponse(Response.Status.OK, "text/html", htmlContent)
+        val response = newFixedLengthResponse(Response.Status.OK, "text/html", sharedText)
         response.addHeader("Content-Disposition", "inline")
 
         return response
