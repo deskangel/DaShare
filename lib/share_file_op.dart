@@ -286,7 +286,7 @@ class SharedFileOp {
 </html>
 ''';
 
-    var hostPort = await _startTextServer(fileId, sharedText: html, host: this.selectedIp, port: this.port);
+    var hostPort = await _startTextServer(fileId, sharedText: html.trim(), host: this.selectedIp, port: this.port);
     if (null == hostPort) {
       debugPrint('Failed to start text server!');
       return null;
