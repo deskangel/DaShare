@@ -20,7 +20,7 @@ class SharedFileOp {
     return _instance!;
   }
 
-  static const _platform = MethodChannel('com.deskangel.dashare/fileserver');
+  static const _platform = MethodChannel('com.deskangel.dashare/sharingserver');
 
   bool _bSharing = false;
 
@@ -58,6 +58,10 @@ class SharedFileOp {
   String? _textContent;
   String? get textContent {
     return _textContent;
+  }
+
+  void setSharedText(String text) {
+    _textContent = text;
   }
 
   Future<String?> getSharedText() async {
@@ -133,10 +137,42 @@ class SharedFileOp {
     String? host,
     int port = 0,
   }) async {
+    if (_bSharing) {
+      debugPrint('Server is already running!');
+      return null;
+    }
+
     try {
       var hostPort = await _platform.invokeMethod('startFileService', {
         'shortName': shortName,
         'fileName': fileName,
+        'host': host,
+        'port': port,
+      });
+      _bSharing = true;
+      return hostPort.toString();
+    } on PlatformException catch (e) {
+      debugPrint('Failed to start file server: ${e.message}');
+    }
+
+    return null;
+  }
+
+  Future<String?> _startTextServer(
+    String shortName, {
+    required String sharedText,
+    String? host,
+    int port = 0,
+  }) async {
+    if (_bSharing) {
+      debugPrint('Server is already running!');
+      return null;
+    }
+
+    try {
+      var hostPort = await _platform.invokeMethod('startTextService', {
+        'shortName': shortName,
+        'sharedText': sharedText,
         'host': host,
         'port': port,
       });
@@ -209,7 +245,7 @@ class SharedFileOp {
   ///
   Future<String?> startSharingText() async {
     if (SharedFileOp.instance.isServerRunning()) {
-      debugPrint('web server is running');
+      debugPrint('text server is running');
       return _url;
     }
 
@@ -230,10 +266,15 @@ class SharedFileOp {
       port = Settings.DEFAULT_PORT;
     }
 
-    var fileId = 'text-share.html';
-    var hostPort = await _startFileServer(fileId, fileName: text, host: this.selectedIp, port: this.port);
+    List<int> rands = [];
+    for (var i = 0; i < 4; i++) {
+      rands.add(Random.secure().nextInt(10));
+    }
+
+    var fileId = '${rands.join()}.html';
+    var hostPort = await _startTextServer(fileId, sharedText: text, host: this.selectedIp, port: this.port);
     if (null == hostPort) {
-      debugPrint('Failed to start web server!');
+      debugPrint('Failed to start text server!');
       return null;
     }
 

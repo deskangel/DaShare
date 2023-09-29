@@ -1,5 +1,6 @@
 import 'package:dashare/settings.dart';
 import 'package:dashare/share_file_op.dart';
+import 'package:dashare/sharing_page.dart';
 import 'package:dashare/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -97,7 +98,22 @@ Please consider using 'Share' button to share it.''',
         icon: const Icon(Icons.share),
         label: const Text('Share'),
         onPressed: () {
-          // share via temp file
+          if (this.controller.text.isEmpty) {
+            Utils.instance.snackMsg(context, 'No content to share');
+            return;
+          }
+
+          SharedFileOp.instance.setSharedText(this.controller.text);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SharingPage(
+                Utils.instance.appTitle,
+                Utils.instance.getAppBarActions(context),
+              ),
+            ),
+          );
         },
       ),
     ];

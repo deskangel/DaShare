@@ -2,7 +2,6 @@ package com.deskangel.dashare
 
 import android.content.Context
 import android.net.Uri
-import android.text.Html
 import android.util.Log
 import fi.iki.elonen.NanoHTTPD
 import java.io.FileNotFoundException
@@ -18,36 +17,13 @@ class FileServer(private var context: Context, private var uri: Uri, private var
     override fun serve(session: IHTTPSession?): Response {
         Log.d("dafileshare", "request uri: ${session?.uri}, file name: $fileName")
 
-        if (session?.uri == "/text-share.html") {
-            return serverText()
-        } else if (session?.uri == "/$shortName") {
+        if (session?.uri == "/$shortName") {
             return serverFile()
         }
 
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Url not found!")
     }
 
-    private fun serverText(): Response {
-        val htmlCode = "<h1>This is a heading</h1><p>This is a paragraph</p>"
-
-        val escapedHtmlCode = Html.escapeHtml(htmlCode)
-
-        val htmlContent = """
-                <html>
-                <head>
-                    <title>Text Share</title>
-                </head>
-                <body>
-                    $escapedHtmlCode
-                </body>
-                </html>
-            """.trimIndent()
-
-        val response = newFixedLengthResponse(Response.Status.OK, "text/html", htmlContent)
-        response.addHeader("Content-Disposition", "inline")
-
-        return response
-    }
 
     private fun serverFile(): Response {
         var fileSize: Long = -1L
@@ -93,3 +69,4 @@ class FileServer(private var context: Context, private var uri: Uri, private var
         }
     }
 }
+
