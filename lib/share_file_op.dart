@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dashare/settings.dart';
@@ -20,7 +21,7 @@ class SharedFileOp {
     return _instance!;
   }
 
-  static const _platform = MethodChannel('com.deskangel.dashare/fileserver');
+  static const _platform = MethodChannel('com.deskangel.dashare/sharingserver');
 
   bool _bSharing = false;
 
@@ -35,7 +36,7 @@ class SharedFileOp {
 
   int port = 0;
 
-  bool isFileServerRunning() {
+  bool isServerRunning() {
     return _bSharing;
   }
 
@@ -53,6 +54,25 @@ class SharedFileOp {
 
   String get sharingFileName {
     return _fileName ?? 'unkonwn';
+  }
+
+  String? _textContent;
+  String? get textContent {
+    return _textContent;
+  }
+
+  void setSharedText(String text) {
+    _textContent = text;
+  }
+
+  Future<String?> getSharedText() async {
+    try {
+      _textContent = await _platform.invokeMethod('getSharedText');
+      return _textContent;
+    } on PlatformException catch (e) {
+      debugPrint(e.message);
+      return null;
+    }
   }
 
   Future<String?> getSharedFileUriScheme() async {
@@ -112,10 +132,51 @@ class SharedFileOp {
 
   ///
   /// return host:port
-  Future<String?> _startFileServer(String shortName, {String? fileName, String? host, int port = 0}) async {
+  Future<String?> _startFileServer(
+    String shortName, {
+    String? fileName,
+    String? host,
+    int port = 0,
+  }) async {
+    if (_bSharing) {
+      debugPrint('Server is already running!');
+      return null;
+    }
+
     try {
-      var hostPort =
-          await _platform.invokeMethod('startFileService', {'shortName': shortName, 'fileName': fileName, 'host': host, 'port': port});
+      var hostPort = await _platform.invokeMethod('startFileService', {
+        'shortName': shortName,
+        'fileName': fileName,
+        'host': host,
+        'port': port,
+      });
+      _bSharing = true;
+      return hostPort.toString();
+    } on PlatformException catch (e) {
+      debugPrint('Failed to start file server: ${e.message}');
+    }
+
+    return null;
+  }
+
+  Future<String?> _startTextServer(
+    String shortName, {
+    required String sharedText,
+    String? host,
+    int port = 0,
+  }) async {
+    if (_bSharing) {
+      debugPrint('Server is already running!');
+      return null;
+    }
+
+    try {
+      var hostPort = await _platform.invokeMethod('startTextService', {
+        'shortName': shortName,
+        'sharedText': sharedText,
+        'host': host,
+        'port': port,
+      });
       _bSharing = true;
       return hostPort.toString();
     } on PlatformException catch (e) {
@@ -139,7 +200,7 @@ class SharedFileOp {
   /// @return the url for sharing
   ///
   Future<String?> startSharingFile() async {
-    if (SharedFileOp.instance.isFileServerRunning()) {
+    if (SharedFileOp.instance.isServerRunning()) {
       debugPrint('file server is running');
       return _url;
     }
@@ -172,6 +233,62 @@ class SharedFileOp {
     var hostPort = await _startFileServer(fileId, fileName: _fileName, host: this.selectedIp, port: this.port);
     if (null == hostPort) {
       debugPrint('Failed to start file server!');
+      return null;
+    }
+
+    _url = 'http://$hostPort/$fileId';
+
+    return _url;
+  }
+
+  ///
+  /// @return the url for sharing
+  ///
+  Future<String?> startSharingText() async {
+    if (SharedFileOp.instance.isServerRunning()) {
+      debugPrint('text server is running');
+      return _url;
+    }
+
+    var text = SharedFileOp.instance.textContent;
+    if (null == text) {
+      debugPrint('No shared text found!');
+
+      return null;
+    }
+
+    if (selectedIp.isEmpty) {
+      return null;
+    }
+
+    if (Settings.instance.useRandomPort) {
+      port = 0;
+    } else {
+      port = Settings.DEFAULT_PORT;
+    }
+
+    List<int> rands = [];
+    for (var i = 0; i < 4; i++) {
+      rands.add(Random.secure().nextInt(10));
+    }
+
+    var fileId = '${rands.join()}.html';
+
+    String html = '''
+<html>
+<head>
+    <title>Text Share</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    ${const HtmlEscape().convert(text)}
+</body>
+</html>
+''';
+
+    var hostPort = await _startTextServer(fileId, sharedText: html, host: this.selectedIp, port: this.port);
+    if (null == hostPort) {
+      debugPrint('Failed to start text server!');
       return null;
     }
 

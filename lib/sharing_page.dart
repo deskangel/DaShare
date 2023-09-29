@@ -29,7 +29,7 @@ class SharingPageState extends State<SharingPage> {
   }
 
   List<Widget> buildPersistentButtons() {
-    if (SharedFileOp.instance.isFileServerRunning()) {
+    if (SharedFileOp.instance.isServerRunning()) {
       return [
         Builder(
           builder: (context) {
@@ -58,8 +58,18 @@ class SharingPageState extends State<SharingPage> {
           icon: const Icon(Icons.queue_play_next),
           label: const Text('Start sharing'),
           onPressed: () async {
-            await SharedFileOp.instance.startSharingFile();
-            setState(() {});
+            String? result;
+            if (SharedFileOp.instance.textContent == null) {
+              result = await SharedFileOp.instance.startSharingFile();
+            } else {
+              result = await SharedFileOp.instance.startSharingText();
+            }
+
+            if (result == null && context.mounted) {
+              Utils.instance.snackMsg(context, 'Failed to start sharing');
+            } else {
+              setState(() {});
+            }
           },
         ),
       ];
@@ -67,7 +77,7 @@ class SharingPageState extends State<SharingPage> {
   }
 
   Widget buildBodyWidget() {
-    if (SharedFileOp.instance.isFileServerRunning()) {
+    if (SharedFileOp.instance.isServerRunning()) {
       var sharingUrl = SharedFileOp.instance.sharingFileUrl;
       if (null == sharingUrl) {
         return buildFailedWidget();
@@ -75,7 +85,11 @@ class SharingPageState extends State<SharingPage> {
         return buildSharingWidget(context, sharingUrl);
       }
     } else {
-      return buildReadyWidget(context);
+      if (SharedFileOp.instance.textContent != null) {
+        return _buildTextReadyWidget();
+      } else {
+        return buildFileReadyWidget();
+      }
     }
   }
 
@@ -134,11 +148,14 @@ class SharingPageState extends State<SharingPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(SharedFileOp.instance.sharingFileName),
-              trailing: Text(SharedFileOp.instance.sharingFileSize),
+          Visibility(
+            visible: SharedFileOp.instance.textContent == null,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                title: Text(SharedFileOp.instance.sharingFileName),
+                trailing: Text(SharedFileOp.instance.sharingFileSize),
+              ),
             ),
           ),
         ],
@@ -146,7 +163,7 @@ class SharingPageState extends State<SharingPage> {
     );
   }
 
-  Widget buildReadyWidget(BuildContext context) {
+  Widget buildFileReadyWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -191,45 +208,66 @@ class SharingPageState extends State<SharingPage> {
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              ListTile(
-                visualDensity: VisualDensity.compact,
-                title: const Text('Ip address: '),
-                trailing: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                      value: SharedFileOp.instance.selectedIp,
-                      items: SharedFileOp.instance.ipAddresses
-                          .map((value) => DropdownMenuItem(value: value, child: Text(value)))
-                          .toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          SharedFileOp.instance.selectedIp = value ?? '';
-                        });
-                      }),
-                ),
-              ),
-              const ListTile(
-                visualDensity: VisualDensity.compact,
-                title: Text('Port: '),
-                trailing: Text('${Settings.DEFAULT_PORT}'),
-              ),
-              SwitchListTile(
-                visualDensity: VisualDensity.compact,
-                value: Settings.instance.useRandomPort,
-                onChanged: (value) {
-                  setState(() {
-                    Settings.instance.useRandomPort = value;
-                  });
-                },
-                title: const Text('Use random port'),
-              ),
-            ],
+        _buildHostConfigWidget(),
+      ],
+    );
+  }
+
+  Widget _buildTextReadyWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SelectableText(SharedFileOp.instance.textContent ?? ''),
+            ),
           ),
         ),
+        _buildHostConfigWidget(),
       ],
+    );
+  }
+
+  Widget _buildHostConfigWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          ListTile(
+            visualDensity: VisualDensity.compact,
+            title: const Text('Ip address: '),
+            trailing: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                  value: SharedFileOp.instance.selectedIp,
+                  items: SharedFileOp.instance.ipAddresses
+                      .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+                      .toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      SharedFileOp.instance.selectedIp = value ?? '';
+                    });
+                  }),
+            ),
+          ),
+          const ListTile(
+            visualDensity: VisualDensity.compact,
+            title: Text('Port: '),
+            trailing: Text('${Settings.DEFAULT_PORT}'),
+          ),
+          SwitchListTile(
+            visualDensity: VisualDensity.compact,
+            value: Settings.instance.useRandomPort,
+            onChanged: (value) {
+              setState(() {
+                Settings.instance.useRandomPort = value;
+              });
+            },
+            title: const Text('Use random port'),
+          ),
+        ],
+      ),
     );
   }
 }
