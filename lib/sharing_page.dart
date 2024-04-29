@@ -92,7 +92,7 @@ class SharingPageState extends State<SharingPage> {
               result = await SharedFileOp.instance.startSharingText();
             }
 
-            if (result == null && context.mounted) {
+            if (result == null && mounted) {
               Utils.instance.snackMsg(context, 'Failed to start sharing');
             } else {
               setState(() {});

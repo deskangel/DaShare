@@ -53,6 +53,8 @@ if [[ "$OPT_APP_FORMAT" == "app" ]]; then
     # Update the build number
     echo $BUILD_NUMBER > .build_number
 elif [[ "$OPT_APP_FORMAT" == "apk" ]]; then
+    sed -Ei '' "s/static const int COPYRIGHT_DATE = ([0-9]+);$/static const int COPYRIGHT_DATE = $YEAR_NUMBER;/g" lib/settings.dart
+
     fvm flutter build apk --obfuscate --release --split-per-abi --split-debug-info=debug_info/$BUILD_NUMBER --build-number $BUILD_NUMBER
     BUILD_RESULT=$?
 
