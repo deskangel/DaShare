@@ -11,7 +11,7 @@ void main() async {
 }
 
 class DaFileShare extends StatelessWidget {
-  const DaFileShare({Key? key}) : super(key: key);
+  const DaFileShare({super.key});
 
   @override
   Widget build(BuildContext context) {
