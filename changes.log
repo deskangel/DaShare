@@ -1,3 +1,6 @@
+v1.3.1
+1. Bump compiling sdk to 34
+
 v1.3.0
 1. Fixed an issue about the specified port is not used by default
 2. Added support for text sharing
