@@ -50,5 +50,8 @@ app.*.map.json
 
 !changes.log
 .build_number
-.fvm/flutter_sdk
 pubspec.lock
+.lh/
+
+# FVM Version Cache
+.fvm/
