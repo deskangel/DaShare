@@ -13,7 +13,7 @@ class Settings {
     return _instance!;
   }
 
-  static const int COPYRIGHT_DATE = 2023;
+  static const int COPYRIGHT_DATE = 2024;
   static const int DEFAULT_PORT = 30800;
 
   static const int MAX_SIZE_FOR_QR_CODE = 1024;
