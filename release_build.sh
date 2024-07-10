@@ -52,6 +52,7 @@ if [[ "$OPT_APP_FORMAT" == "app" ]]; then
     set +x
     # Update the build number
     echo $BUILD_NUMBER > .build_number
+
 elif [[ "$OPT_APP_FORMAT" == "apk" ]]; then
     sed -Ei '' "s/static const int COPYRIGHT_DATE = ([0-9]+);$/static const int COPYRIGHT_DATE = $YEAR_NUMBER;/g" lib/settings.dart
 
@@ -61,12 +62,14 @@ elif [[ "$OPT_APP_FORMAT" == "apk" ]]; then
     if [[ $BUILD_RESULT == 0 ]]; then
         # Update the build number
         echo $BUILD_NUMBER > .build_number
-
-        open "build/app/outputs/bundle/release"
     else
         clrecho "Failed to build the $OPT_APP_FORMAT"
         return;
     fi
+fi
+
+if [[ $BUILD_RESULT == 0 && $OPT_APP_FORMAT == "app" ]]; then
+    open "build/app/outputs/bundle/release"
 fi
 
 if [[ $BUILD_RESULT == 0 && $OPT_DEPLOYMENT == "-d" ]]; then
